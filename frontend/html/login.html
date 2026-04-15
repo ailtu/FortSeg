@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>FortSeg</title>
+    
+    <link rel="stylesheet" href="../css/login.css">
+
+    <!-- reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="logo">
+            <img src="../images/logo.png" alt="logo">
+        </div>
+
+        <input type="text" id="username" placeholder="Usuário">
+        <input type="password" id="password" placeholder="Senha">
+
+        <!-- CAPTCHA -->
+        <div class="g-recaptcha" data-sitekey="SUA_SITE_KEY"></div>
+
+        <button onclick="login()">Entrar</button>
+
+        <div class="footer">
+            <a href="#" onclick="forgotPassword()">Esqueci minha senha</a>
+        </div>
+
+    </div>
+
+    <script src="../js/login.js"></script>
+</body>
+
+</html>
