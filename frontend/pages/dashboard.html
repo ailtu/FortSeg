@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>FortSeg
+    </title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <aside class="sidebar">
+            <h2>FortSeg</h2>
+            <button onclick="logout()">Sair</button>
+        </aside>
+
+        <main class="main-content">
+            <h1>Usuários Cadastrados</h1>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="userTable"></tbody>
+            </table>
+
+        </main>
+
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+</body>
+
+</html>
