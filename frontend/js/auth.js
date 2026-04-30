@@ -1,19 +1,36 @@
-const ADMIN_USER = "admin";
-const ADMIN_PASS = "1234";
-
 const form = document.getElementById("loginForm");
 const errorMsg = document.getElementById("error-msg");
 
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+    const email = document.getElementById("username").value;
+    const senha = document.getElementById("password").value;
 
-    if (username === ADMIN_USER && password === ADMIN_PASS) {
-        localStorage.setItem("auth", "true");
-        window.location.href = "dashboard.html";
-    } else {
-        errorMsg.textContent = "Usuário ou senha inválidos!";
+    try {
+        const response = await fetch("http://localhost:3000/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, senha })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // salva usuário logado
+            localStorage.setItem("auth", "true");
+            localStorage.setItem("user", JSON.stringify(data.user));
+
+            // redireciona
+            window.location.href = "dashboard.html";
+        } else {
+            errorMsg.textContent = data.error;
+        }
+
+    } catch (error) {
+        console.error(error);
+        errorMsg.textContent = "Erro ao conectar com o servidor";
     }
 });
