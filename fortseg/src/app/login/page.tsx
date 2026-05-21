@@ -1,48 +1,78 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ShieldCheck, Lock, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import ReCAPTCHA from "react-google-recaptcha";
+
 export default function LoginPage() {
     const router = useRouter();
+
+    const recaptchaRef =
+        useRef<ReCAPTCHA>(null);
 
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [loading, setLoading] = useState(false);
     const [erro, setErro] = useState("");
 
-    async function handleLogin(e: React.FormEvent) {
+    async function handleLogin(
+        e: React.FormEvent
+    ) {
         e.preventDefault();
 
         setErro("");
         setLoading(true);
 
+        const captchaToken =
+            recaptchaRef.current?.getValue();
+
+        if (!captchaToken) {
+            setErro(
+                "Confirme o reCAPTCHA."
+            );
+
+            setLoading(false);
+            return;
+        }
+
         try {
-            const response = await fetch("/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email,
-                    senha,
-                }),
-            });
+            const response = await fetch(
+                "/api/auth/login",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+                    },
+                    body: JSON.stringify({
+                        email,
+                        senha,
+                        captchaToken,
+                    }),
+                }
+            );
 
             const data = await response.json();
 
             if (!response.ok) {
                 setErro(data.erro);
+
                 setLoading(false);
                 return;
             }
 
-            localStorage.setItem("token", data.token);
+            localStorage.setItem(
+                "token",
+                data.token
+            );
 
             router.push("/dashboard");
         } catch (error) {
-            setErro("Erro ao realizar login");
+            setErro(
+                "Erro ao realizar login"
+            );
         }
 
         setLoading(false);
@@ -50,7 +80,6 @@ export default function LoginPage() {
 
     return (
         <main className="flex min-h-screen bg-zinc-950">
-            {/* Lado esquerdo */}
             <section className="hidden w-1/2 flex-col justify-between bg-gradient-to-br from-slate-950 via-zinc-900 to-zinc-950 p-10 text-white lg:flex">
                 <div className="flex items-center gap-3">
                     <div className="rounded-2xl bg-emerald-500/20 p-3">
@@ -74,17 +103,15 @@ export default function LoginPage() {
                     </h2>
 
                     <p className="max-w-lg text-lg text-zinc-400">
-                        Gerencie permissões, colaboradores e níveis
-                        de acesso em um único ambiente seguro.
+                        Proteção avançada contra acessos indevidos.
                     </p>
                 </div>
 
                 <div className="text-sm text-zinc-500">
-                    © 2026 FortSeg. Todos os direitos reservados.
+                    © 2026 FortSeg
                 </div>
             </section>
 
-            {/* Lado direito */}
             <section className="flex w-full items-center justify-center p-6 lg:w-1/2">
                 <div className="w-full max-w-md rounded-3xl border border-zinc-800 bg-zinc-900/70 p-8 shadow-2xl backdrop-blur">
                     <div className="mb-8">
@@ -93,7 +120,7 @@ export default function LoginPage() {
                         </h2>
 
                         <p className="mt-2 text-zinc-400">
-                            Acesse o painel administrativo do FortSeg.
+                            Acesse o painel do FortSeg.
                         </p>
                     </div>
 
@@ -111,7 +138,7 @@ export default function LoginPage() {
 
                                 <input
                                     type="email"
-                                    placeholder="seuemail@empresa.com"
+                                    placeholder="email@empresa.com"
                                     className="w-full bg-transparent p-3 text-white outline-none"
                                     value={email}
                                     onChange={(e) =>
@@ -131,7 +158,7 @@ export default function LoginPage() {
 
                                 <input
                                     type="password"
-                                    placeholder="••••••••"
+                                    placeholder="********"
                                     className="w-full bg-transparent p-3 text-white outline-none"
                                     value={senha}
                                     onChange={(e) =>
@@ -139,6 +166,17 @@ export default function LoginPage() {
                                     }
                                 />
                             </div>
+                        </div>
+
+                        <div className="flex justify-center">
+                            <ReCAPTCHA
+                                ref={recaptchaRef}
+                                sitekey={
+                                    process.env
+                                        .NEXT_PUBLIC_RECAPTCHA_SITE_KEY!
+                                }
+                                theme="dark"
+                            />
                         </div>
 
                         {erro && (
@@ -152,7 +190,9 @@ export default function LoginPage() {
                             disabled={loading}
                             className="w-full rounded-xl bg-emerald-500 p-3 font-semibold text-black transition hover:bg-emerald-400 disabled:opacity-50"
                         >
-                            {loading ? "Entrando..." : "Entrar"}
+                            {loading
+                                ? "Entrando..."
+                                : "Entrar"}
                         </button>
                     </form>
                 </div>

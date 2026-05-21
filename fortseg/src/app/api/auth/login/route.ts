@@ -3,6 +3,38 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
 
 export async function POST(req: Request) {
+
+    const verifyResponse = await fetch(
+        "https://www.google.com/recaptcha/api/siteverify",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                    "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+                secret:
+                    process.env
+                        .RECAPTCHA_SECRET_KEY!,
+                response: body.captchaToken,
+            }),
+        }
+    );
+
+    const captchaData =
+        await verifyResponse.json();
+
+    if (!captchaData.success) {
+        return Response.json(
+            {
+                erro: "reCAPTCHA inválido",
+            },
+            {
+                status: 400,
+            }
+        );
+    }
+
     try {
         const body = await req.json();
 
@@ -58,4 +90,6 @@ export async function POST(req: Request) {
             { status: 500 }
         );
     }
+
+    const body = await req.json();
 }
