@@ -90,14 +90,13 @@ export async function POST(req: Request) {
 
         return Response.json({
             token,
-
+            permissao: usuario.permissao,
             usuario: {
                 id: usuario.id,
                 nome: usuario.nome,
                 email: usuario.email,
                 cargo: usuario.cargo,
-                permissao:
-                    usuario.permissao,
+                permissao: usuario.permissao,
             },
         });
     } catch (error) {

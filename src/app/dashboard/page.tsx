@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface Usuario {
     id: number;
@@ -63,7 +64,6 @@ export default function Dashboard() {
 
     return (
         <main className="min-h-screen bg-zinc-950 text-white">
-            {/* Header */}
             <header className="border-b border-zinc-800 bg-zinc-900 px-8 py-5">
                 <div className="flex items-center gap-3">
                     <div className="rounded-2xl bg-emerald-500/20 p-3">
@@ -82,9 +82,7 @@ export default function Dashboard() {
                 </div>
             </header>
 
-            {/* Conteúdo */}
             <section className="p-8">
-                {/* Cards */}
                 <div className="mb-8 grid gap-6 md:grid-cols-3">
                     <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-6">
                         <div className="mb-4 flex items-center justify-between">
@@ -140,12 +138,27 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                {/* Tabela */}
                 <div className="overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900">
-                    <div className="border-b border-zinc-800 px-6 py-4">
+                    <div className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
                         <h2 className="text-xl font-semibold">
                             Colaboradores
                         </h2>
+
+                        <button
+                            onClick={() => window.location.href = "/register"}
+                            className="
+            flex items-center gap-2
+            rounded-xl
+            bg-emerald-500
+            px-4 py-2
+            font-medium
+            text-black
+            transition
+            hover:bg-emerald-400
+        "
+                        >
+                            + Novo Colaborador
+                        </button>
                     </div>
 
                     {loading ? (

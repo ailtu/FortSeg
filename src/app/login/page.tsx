@@ -55,6 +55,7 @@ export default function LoginPage() {
             );
 
             const data = await response.json();
+            console.log(data);
 
             if (!response.ok) {
                 setErro(data.erro);
@@ -62,19 +63,29 @@ export default function LoginPage() {
                 setLoading(false);
                 return;
             }
-
             localStorage.setItem(
                 "token",
                 data.token
             );
 
-            router.push("/dashboard");
+            localStorage.setItem(
+                "usuario",
+                JSON.stringify(data.usuario)
+            );
+
+            if (
+                data.permissao?.toUpperCase() === "ADMIN"
+            ) {
+                router.push("/dashboard");
+            } else {
+                router.push("/seu-cadastro");
+            }
+
         } catch (error) {
             setErro(
                 "Erro ao realizar login"
             );
         }
-
         setLoading(false);
     }
 
